@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="hi-IN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Riddler.AI - The Voice-Native Teaching Companion</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Hind:wght@300;400;500;600;700&display=swap');
+        
+        :root {
+            --primary: #FF5722;
+            --secondary: #3949AB;
+            --accent: #00BFA5;
+            --dark: #212121;
+            --light: #FAFAFA;
+        }
+        
+        body {
+            font-family: 'Poppins', 'Hind', sans-serif;
+            color: var(--dark);
+            background-color: var(--light);
+        }
+        
+        .hindi {
+            font-family: 'Hind', sans-serif;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+            border-radius: 50px;
+            padding: 12px 28px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: 2px solid var(--primary);
+        }
+        
+        .btn-primary:hover {
+            background-color: transparent;
+            color: var(--primary);
+        }
+        
+        .btn-secondary {
+            background-color: var(--secondary);
+            color: white;
+            border-radius: 50px;
+            padding: 12px 28px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: 2px solid var(--secondary);
+        }
+        
+        .btn-secondary:hover {
+            background-color: transparent;
+            color: var(--secondary);
+        }
+        
+        .mic-btn {
+            background-color: var(--accent);
+            color: white;
+            height: 64px;
+            width: 64px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .mic-btn:hover {
+            transform: scale(1.05);
+        }
+        
+        .mic-btn.active {
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(0, 191, 165, 0.7);
+            }
+            70% {
+                box-shadow: 0 0 0 15px rgba(0, 191, 165, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(0, 191, 165, 0);
+            }
+        }
+        
+        .sound-wave {
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 3px;
+        }
+        
+        .sound-wave .bar {
+            background-color: var(--accent);
+            width: 3px;
+            height: 100%;
+            border-radius: 3px;
+            animation: sound-wave-animation 1.5s infinite ease-in-out;
+        }
+        
+        .sound-wave .bar:nth-child(2) { animation-delay: 0.2s; }
+        .sound-wave .bar:nth-child(3) { animation-delay: 0.4s; }
+        .sound-wave .bar:nth-child(4) { animation-delay: 0.6s; }
+        .sound-wave .bar:nth-child(5) { animation-delay: 0.8s; }
+        .sound-wave .bar:nth-child(6) { animation-delay: 1.0s; }
+        
+        @keyframes sound-wave-animation {
+            0%, 100% { height: 10%; }
+            50% { height: 100%; }
+        }
+        
+        .section {
+            padding: 4rem 1rem;
+        }
+        
+        .section-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            text-align: center;
+            color: var(--secondary);
+        }
+        
+        .step-box {
+            background-color: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+        
+        .step-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background-color: rgba(255, 87, 34, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            color: var(--primary);
+            font-size: 24px;
+        }
+        
+        .language-flag {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 12px;
+            color: white;
+            background-color: var(--secondary);
+        }
+        
+        .map-dot {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background-color: var(--primary);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            cursor: pointer;
+        }
+        
+        .map-dot:hover {
+            transform: translate(-50%, -50%) scale(1.5);
+            z-index: 10;
+        }
+        
+        .map-dot::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background-color: rgba(255, 87, 34, 0.4);
+            animation: ripple 2s infinite;
+        }
+        
+        @keyframes ripple {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(3);
+                opacity: 0;
+            }
+        }
+        
+        /* Form Styling */
+        .form-control {
+            background-color: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 12px 16px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-bottom: 1rem;
+        }
+        
+        .form-control:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(0, 191, 165, 0.1);
+            outline: none;
+        }
+        
+        .form-label {
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+        
+        /* Voice Input Animation */
+        .voice-input {
+            position: relative;
+        }
+        
+        .voice-input .mic-icon {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--accent);
+            cursor: pointer;
+        }
+        
+        /* Customized Select */
+        select.form-control {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 16px;
+        }
+        
+        /* Mobile Optimizations */
+        @media (max-width: 768px) {
+            .section {
+                padding: 3rem 1rem;
+            }
+            
+            .section-title {
+                font-size: 1.75rem;
+            }
+            
+            .btn-primary, .btn-secondary {
+                width: 100%;
+                text-align: center;
+            }
+            
+            .footer-links {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+            
+            .footer-links > div {
+                margin-bottom: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <section class="section bg-gradient-to-b from-white to-blue-50">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row items-center">
+                <div class="md:w-1/2 mb-8 md:mb-0">
+                    <h1 class="text-3xl md:text-5xl font-bold mb-3 text-gray-800">
+                        <span class="hindi text-primary">पढ़ो जैसे बात करते हो</span>
+                    </h1>
+                    <h2 class="text-xl md:text-2xl mb-6 text-gray-700">India's first voice-native teaching companion that speaks, listens, and teaches in your mother tongue.</h2>
+                    <p class="text-gray-600 mb-8">Complex subjects explained through natural conversation, not endless reading.</p>
+                    
+                    <button class="btn-primary hindi text-lg">
+                        बात करें, सीखें, आगे बढ़ें
+                    </button>
+                    
+                    <div class="mt-6 flex items-center">
+                        <span class="text-sm text-gray-500 mr-2">Available in:</span>
+                        <div class="flex space-x-1">
+                            <span class="language-flag" title="Hindi">हि</span>
+                            <span class="language-flag" title="Bengali">বা</span>
+                            <span class="language-flag" title="Tamil">த</span>
+                            <span class="language-flag bg-gray-300" title="More languages coming soon">+5</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="md:w-1/2 relative">
+                    <div class="bg-white rounded-lg shadow-xl p-6 relative">
+                        <!-- Student image with voice interaction visualization -->
+                        <img src="/api/placeholder/400/320" alt="Student speaking to AI Tutor" class="rounded-lg w-full mb-4" />
+                        
+                        <div class="absolute bottom-12 left-1/2 transform -translate-x-1/2">
+                            <div class="sound-wave">
+                                <div class="bar"></div>
+                                <div class="bar"></div>
+                                <div class="bar"></div>
+                                <div class="bar"></div>
+                                <div class="bar"></div>
+                                <div class="bar"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex justify-center">
+                            <div class="mic-btn active">
+                                <i class="fas fa-microphone"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- How It Works Section -->
+    <section class="section bg-white">
+        <div class="container mx-auto px-4">
+            <h2 class="section-title">Simple As Talking To A Teacher</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Step 1 -->
+                <div class="step-box">
+                    <div class="flex flex-col items-center text-center">
+                        <div class="feature-icon">
+                            <i class="fas fa-comment-alt"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-3">SPEAK</h3>
+                        <p class="text-gray-600">Ask questions in your language, your accent, your way</p>
+                        
+                        <div class="mt-4 mic-btn">
+                            <i class="fas fa-microphone"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Step 2 -->
+                <div class="step-box">
+                    <div class="flex flex-col items-center text-center">
+                        <div class="feature-icon">
+                            <i class="fas fa-headphones"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-3">LISTEN</h3>
+                        <p class="text-gray-600">Receive clear explanations adapted to your understanding</p>
+                        
+                        <div class="mt-4 sound-wave">
+                            <div class="bar"></div>
+                            <div class="bar"></div>
+                            <div class="bar"></div>
+                            <div class="bar"></div>
+                            <div class="bar"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Step 3 -->
+                <div class="step-box">
+                    <div class="flex flex-col items-center text-center">
+                        <div class="feature-icon">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-3">LEARN</h3>
+                        <p class="text-gray-600">Master concepts through conversation, not memorization</p>
+                        
+                        <div class="mt-4">
+                            <i class="fas fa-lightbulb text-yellow-500 text-3xl"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-8 italic text-gray-600">
+                "No typing, no reading walls of text, no language barriers - just natural learning conversations."
+            </div>
+        </div>
+    </section>
+    
+    <!-- Emotional Connection Section -->
+    <section class="section bg-blue-50">
+        <div class="container mx-auto px-4">
+            <h2 class="section-title">Learning The Way You First Learned</h2>
+            
+            <div class="flex flex-col md:flex-row items-center justify-between gap-8">
+                <div class="md:w-1/2">
+                    <img src="/api/placeholder/400/300" alt="Traditional family teaching scene" class="rounded-lg shadow-lg w-full mb-4" />
+                    <p class="text-sm text-center text-gray-500">Learning from family elders</p>
+                </div>
+                
+                <div class="md:w-1/2">
+                    <img src="/api/placeholder/400/300" alt="AI Tutor interaction" class="rounded-lg shadow-lg w-full mb-4" />
+                    <p class="text-sm text-center text-gray-500">Learning from AI Tutor</p>
+                </div>
+            </div>
+            
+            <div class="mt-12">
+                <p class="text-gray-700 mb-6">Remember how your family taught you your first lessons? Not through books, but through patient conversations in your mother tongue.</p>
+                
+                <p class="text-gray-700 mb-6">AI Tutor brings that same natural experience to your studies:</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+                    <div class="bg-white p-4 rounded-lg shadow">
+                        <div class="flex items-start">
+                            <div class="feature-icon mr-4">
+                                <i class="fas fa-user-friends"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-lg mb-2">Personal Attention</h3>
+                                <p class="text-gray-600">Like a family elder explaining just for you</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white p-4 rounded-lg shadow">
+                        <div class="flex items-start">
+                            <div class="feature-icon mr-4">
+                                <i class="fas fa-language"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-lg mb-2">Your Language</h3>
+                                <p class="text-gray-600">Thinks and teaches in the language you're comfortable with</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white p-4 rounded-lg shadow">
+                        <div class="flex items-start">
+                            <div class="feature-icon mr-4">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-lg mb-2">Familiar Examples</h3>
+                                <p class="text-gray-600">Uses local contexts you understand, not foreign concepts</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white p-4 rounded-lg shadow">
+                        <div class="flex items-start">
+                            <div class="feature-icon mr-4">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-lg mb-2">Patient Guidance</h3>
+                                <p class="text-gray-600">Never rushes, never judges, explains until you understand</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="text-center mt-8 italic text-gray-600">
+                    "It's like having the best teacher from your village available 24/7 in your pocket."
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Credibility Section -->
+    <section class="section bg-white">
+        <div class="container mx-auto px-4">
+            <h2 class="section-title">Built With India's Teachers For India's Students</h2>
+            
+            <div class="flex flex-col md:flex-row items-center justify-between gap-12">
+                <div class="md:w-1/2">
+                    <div class="relative h-72 md:h-96 bg-blue-50 rounded-lg overflow-hidden">
+                        <!-- Simple India map with highlight points -->
+                        <img src="/api/placeholder/500/400" alt="Map of India showing teacher participation" class="w-full h-full object-contain" />
+                        
+                        <!-- Interactive dots (would be positioned with JS in real implementation) -->
+                        <div class="map-dot" style="top: 30%; left: 25%;" title="Teacher from Bihar"></div>
+                        <div class="map-dot" style="top: 25%; left: 40%;" title="Students in UP"></div>
+                        <div class="map-dot" style="top: 45%; left: 20%;" title="Teachers from Rajasthan"></div>
+                        <div class="map-dot" style="top: 60%; left: 50%;" title="Language experts from Telangana"></div>
+                        <div class="map-dot" style="top: 70%; left: 30%;" title="Beta testing in Karnataka"></div>
+                    </div>
+                </div>
+                
+                <div class="md:w-1/2">
+                    <div class="grid grid-cols-1 gap-4">
+                        <div class="flex items-center">
+                            <div class="w-12 h-12 bg-primary text-white rounded-full flex items-center justify-center text-xl font-bold mr-4">
+                                10k+
+                            </div>
+                            <div>
+                                <p class="font-semibold">Hours of real teacher-student conversations</p>
+                                <p class="text-sm text-gray-600">Used for natural language training</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center">
+                            <div class="w-12 h-12 bg-primary text-white rounded-full flex items-center justify-center text-xl font-bold mr-4">
+                                50+
+                            </div>
+                            <div>
+                                <p class="font-semibold">Teachers from non-metro schools</p>
+                                <p class="text-sm text-gray-600">Helped develop our approach</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center">
+                            <div class="w-12 h-12 bg-primary text-white rounded-full flex items-center justify-center text-xl font-bold mr-4">
+                                8
+                            </div>
+                            <div>
+                                <p class="font-semibold">Languages supported</p>
+                                <p class="text-sm text-gray-600">Including Hindi, Bengali, Tamil, Telugu, Marathi, Gujarati, Kannada, and Malayalam</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center">
+                            <div class="w-12 h-12 bg-primary text-white rounded-full flex items-center justify-center text-xl font-bold mr-4">
+                                500
+                            </div>
+                            <div>
+                                <p class="font-semibold">Students in Bihar, UP, and Rajasthan</p>
+                                <p class="text-sm text-gray-600">Already learning with AI Tutor</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Why Voice Matters Section -->
+    <section class="section bg-blue-50">
+        <div class="container mx-auto px-4">
+            <h2 class="section-title">Voice: The Great Equalizer in Education</h2>
+            
+            <p class="text-center text-gray-700 mb-8">
+                In India, true educational access means meeting students where they are:
+            </p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-white p-6 rounded-lg shadow">
+                    <div class="flex items-start">
+                        <div class="feature-icon mr-4">
+                            <i class="fas fa-book"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-lg mb-2">Beyond Text Barriers</h3>
+                            <p class="text-gray-600">32% of rural students struggle with text-heavy interfaces</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white p-6 rounded-lg shadow">
+                    <div class="flex items-start">
+                        <div class="feature-icon mr-4">
+                            <i class="fas fa-comments"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-lg mb-2">Natural Communication</h3>
+                            <p class="text-gray-600">Students explain concepts 4x better verbally than in writing</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white p-6 rounded-lg shadow">
+                    <div class="flex items-start">
+                        <div class="feature-icon mr-4">
+                            <i class="fas fa-mobile-alt"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-lg mb-2">Accessibility First</h3>
+                            <p class="text-gray-600">Works on basic smartphones with minimal data usage</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white p-6 rounded-lg shadow">
+                    <div class="flex items-start">
+                        <div class="feature-icon mr-4">
+                            <i class="fas fa-heart"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-lg mb-2">Language Comfort</h3>
+                            <p class="text-gray-600">Think and learn in the language you dream in</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-8 italic text-gray-600">
+                "When education speaks your language, knowledge becomes yours."
+            </div>
+        </div>
+    </section>
+    
+    <!-- Early Access Section -->
+    <section class="section bg-white">
+        <div class="container mx-auto px-4 max-w-2xl">
+            <h2 class="section-title">Be Among The First To Experience Riddler.AI</h2>
+            
+            <p class="text-center text-gray-700 mb-8">
+                Join our early access program and help shape the future of learning in India.
+            </p>
+            
+            <div class="bg-blue-50 p-6 md:p-8 rounded-lg shadow-lg">
+                <form>
+                    <div class="mb-4">
+                        <label for="name" class="form-label">Name</label>
+                        <div class="voice-input">
+                            <input type="text" id="name" class="form-control" placeholder="Your full name">
+                            <i class="fas fa-microphone mic-icon"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="phone" class="form-label">Phone Number (WhatsApp)</label>
+                        <div class="voice-input">
+                            <input type="tel" id="phone" class="form-control" placeholder="e.g. 9876543210">
+                            <i class="fas fa-microphone mic-icon"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="language" class="form-label">Preferred Language</label>
+                        <select id="language" class="form-control">
+                            <option value="">Select your language</option>
+                            <option value="hindi">Hindi</option>
+                            <option value="bengali">Bengali</option>
+                            <option value="tamil">Tamil</option>
+                            <option value="telugu">Telugu</option>
+                            <option value="marathi">Marathi</option>
+                            <option value="gujarati">Gujarati</option>
+                            <option value="kannada">Kannada</option>
+                            <option value="malayalam">Malayalam</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-6">
+                        <label for="school" class="form-label">School/College</label>
+                        <div class="voice-input">
+                            <input type="text" id="school" class="form-control" placeholder="Your institution name">
+                            <i class="fas fa-microphone mic-icon"></i>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn-primary w-full hindi text-lg">
+                        मुझे जल्दी एक्सेस चाहिए
+                    </button>
+                </form>
+                
+                <p class="text-center text-sm text-gray-500 mt-4">
+                    Limited to 500 students in the first phase. Currently available in Hindi, Bengali, and Tamil.
+                </p>
+            </div>
+        </div>
+    </section>
+    
+    <!-- For Partners & Supporters Section -->
+    <section class="section bg-blue-50">
+        <div class="container mx-auto px-4">
+            <h2 class="section-title">Join Our Mission</h2>
+            
+            <div class="flex flex-col md:flex-row gap-8">
+                <div class="md:w-1/2">
+                    <h3 class="text-xl font-semibold mb-4">Why We're Building This</h3>
+                    <p class="text-gray-700 mb-4">
+                        We believe every student deserves quality education in their own language and learning style. India's next generation of innovators and leaders are currently held back not by ability, but by access. Voice-native AI can bridge this gap at scale.
+                    </p>
+                </div>
+                
+                <div class="md:w-1/2">
+                    <h3 class="text-xl font-semibold mb-4">How You Can Collaborate</h3>
+                    <ul class="space-y-2 text-gray-700">
+                        <li class="flex items-start">
+                            <i class="fas fa-school text-primary mt-1 mr-2"></i>
+                            <span><strong>Schools & Coaching Centers</strong>: Offer AI Tutor as a support tool</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-hands-helping text-primary mt-1 mr-2"></i>
+                            <span><strong>Education NGOs</strong>: Partner for rural distribution</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-chart-line text-primary mt-1 mr-2"></i>
+                            <span><strong>Investors & Supporters</strong>: Help us reach 1 million students by 2026</span>
+                        </li>
+                    </ul>
+                    
+                    <div class="mt-6">
+                        <button class="btn-secondary">
+                            Partner With Us
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Footer Section -->
+    <footer class="bg-gray-800 text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between footer-links">
+                <div>
+                    <h3 class="text-xl font-bold mb-4">Riddler.AI</h3>
+                    <p class="text-gray-400 max-w-xs">
+                        India's first voice-native teaching companion that speaks, listens, and teaches in your mother tongue.
+                    </p>
+                </div>
+                
+                <div>
+                    <h4 class="font-semibold mb-3">Download App</h4>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white">
+                            <i class="fab fa-google-play mr-1"></i> Play Store
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white">
+                            <i class="fab fa-apple mr-1"></i> App Store
+                        </a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 class="font-semibold mb-3">Contact</h4>
+                    <p class="text-gray-400">partnership@aitutor.in</p>
+                    <p class="text-gray-400">support@aitutor.in</p>
+                </div>
+                
+                <div>
+                    <h4 class="font-semibold mb-3">Follow Us</h4>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white">
+                            <i class="fab fa-facebook"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white">
+                            <i class="fab fa-linkedin"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-8 pt-6 border-t border-gray-700 text-center text-gray-400 text-sm">
+                <p>Currently available in selected districts of Bihar, UP, and Rajasthan</p>
+                <p class="mt-2">&copy; 2025 Riddler.AI. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+    
+    <script>
+        // Simple animation for mic buttons
+        document.addEventListener('DOMContentLoaded', function() {
+            const micButtons = document.querySelectorAll('.mic-btn');
+            
+            micButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    this.classList.toggle('active');
+                    
+                    // Find the closest sound wave and toggle its visibility
+                    const parent = this.closest('.step-box') || this.parentElement.parentElement;
+                    const soundWave = parent.querySelector('.sound-wave');
+                    
+                    if (soundWave) {
+                        soundWave.style.display = this.classList.contains('active') ? 'flex' : 'none';
+                    }
+                });
+            });
+            
+            // Voice input for form fields
+            const micIcons = document.querySelectorAll('.mic-icon');
+            
+            micIcons.forEach(icon => {
+                icon.addEventListener('click', function() {
+                    const input = this.parentElement.querySelector('input');
+                    
+                    // Toggle active class for animation
+                    this.classList.toggle('text-accent');
+                    this.classList.toggle('animate-pulse');
+                    
+                    // Simulate voice input (in a real app, this would trigger speech recognition)
+                    setTimeout(() => {
+                        this.classList.remove('text-accent', 'animate-pulse');
+                        // Simulate completing voice input
+                        if (input.id === 'name') input.value = 'Rahul Kumar';
+                        if (input.id === 'phone') input.value = '9876543210';
+                        if (input.id === 'school') input.value = 'Government Higher Secondary School, Gorakhpur';
+                    }, 2000);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
