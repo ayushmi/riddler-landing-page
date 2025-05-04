@@ -291,13 +291,73 @@
             <div class="flex flex-col md:flex-row items-center">
                 <div class="md:w-1/2 mb-8 md:mb-0">
                     <h1 class="text-3xl md:text-5xl font-bold mb-3 text-gray-800">
-                        <span class="hindi text-primary">पढ़ो जैसे बात करते हो</span>
+                        <span id="animated-tagline" class="text-primary"></span>
                     </h1>
-                    <h2 class="text-xl md:text-2xl mb-6 text-gray-700">India's first voice-native teaching companion that speaks, listens, and teaches in your mother tongue.</h2>
-                    <p class="text-gray-600 mb-8">Complex subjects explained through natural conversation, not endless reading.</p>
+                    
+                    <script>
+                        document.addEventListener('DOMContentLoaded', function() {
+                            const taglines = [
+                                { language: "English", text: "Learn in Your Language, Learn Your Way" },
+                                { language: "Hindi", text: "अपनी भाषा में सीखें, अपने तरीके से सीखें" },
+                                { language: "Bengali", text: "আপনার ভাষায় শিখুন, আপনার মতো করে শিখুন" },
+                                { language: "Tamil", text: "உங்கள் மொழியில் கற்றுக்கொள்ளுங்கள், உங்கள் வழியில் கற்றுக்கொள்ளுங்கள்" },
+                                { language: "Telugu", text: "మీ భాషలో నేర్చుకోండి, మీ విధానంలో నేర్చుకోండి" },
+                                { language: "Marathi", text: "तुमच्या भाषेत शिका, तुमच्या पद्धतीने शिका" },
+                                { language: "Gujarati", text: "તમારી ભાષામાં શીખો, તમારી રીતે શીખો" },
+                                { language: "Kannada", text: "ನಿಮ್ಮ ಭಾಷೆಯಲ್ಲಿ ಕಲಿಯಿರಿ, ನಿಮ್ಮ ರೀತಿಯಲ್ಲಿ ಕಲಿಯಿರಿ" },
+                                { language: "Malayalam", text: "നിങ്ങളുടെ ഭാഷയിൽ പഠിക്കുക, നിങ്ങളുടെ രീതിയിൽ പഠിക്കുക" }
+                            ];
+                            
+                            const animatedElement = document.getElementById('animated-tagline');
+                            let currentIndex = 0;
+                            
+                            // Initial text
+                            updateTagline();
+                            
+                            // Update text with animation
+                            function updateTagline() {
+                                // Fade out
+                                animatedElement.style.opacity = 0;
+                                
+                                setTimeout(() => {
+                                    // Update text while invisible
+                                    animatedElement.textContent = taglines[currentIndex].text;
+                                    animatedElement.setAttribute('data-language', taglines[currentIndex].language);
+                                    
+                                    // Fade in
+                                    animatedElement.style.opacity = 1;
+                                    
+                                    // Move to next language
+                                    currentIndex = (currentIndex + 1) % taglines.length;
+                                }, 500); // Wait for fade out
+                            }
+                            
+                            // Start animation cycle
+                            setInterval(updateTagline, 4000);
+                        });
+                    </script>
+                    
+                    <style>
+                        #animated-tagline {
+                            display: block;
+                            transition: opacity 0.5s ease-in-out;
+                            text-align: center;
+                            min-height: 3.5rem;
+                        }
+                        
+                        /* Responsive adjustments */
+                        @media (max-width: 768px) {
+                            #animated-tagline {
+                                font-size: 1.75rem;
+                                min-height: 5rem;
+                            }
+                        }
+                    </style>
+                    <h2 class="text-xl md:text-2xl mb-6 text-gray-700">India's first AI teaching companion that understands and teaches in your mother tongue.</h2>
+                    <p class="text-gray-600 mb-8">Complex subjects explained naturally, making learning accessible and effective for everyone.</p>
                     
                     <button class="btn-primary hindi text-lg">
-                        बात करें, सीखें, आगे बढ़ें
+                        शुरू करें, सीखें, आगे बढ़ें
                     </button>
                     
                     <div class="mt-6 flex items-center">
@@ -313,24 +373,11 @@
                 
                 <div class="md:w-1/2 relative">
                     <div class="bg-white rounded-lg shadow-xl p-6 relative">
-                        <!-- Student image with voice interaction visualization -->
-                        <img src="/riddler-landing-page/Gemini_Generated_Image_qu88jbqu88jbqu88.jpeg" alt="Student speaking to AI Tutor" class="rounded-lg w-full mb-4" />
+                        <!-- Traditional teaching scene -->
+                        <img src="/riddler-landing-page/Gemini_Generated_Image_qu88jbqu88jbqu88.jpeg" alt="Traditional teaching with modern AI assistance" class="rounded-lg w-full" />
                         
-                        <div class="absolute bottom-12 left-1/2 transform -translate-x-1/2">
-                            <div class="sound-wave">
-                                <div class="bar"></div>
-                                <div class="bar"></div>
-                                <div class="bar"></div>
-                                <div class="bar"></div>
-                                <div class="bar"></div>
-                                <div class="bar"></div>
-                            </div>
-                        </div>
-                        
-                        <div class="flex justify-center">
-                            <div class="mic-btn active">
-                                <i class="fas fa-microphone"></i>
-                            </div>
+                        <div class="flex justify-center items-center mt-4">
+                            <p class="text-sm text-gray-600">Combining traditional wisdom with modern AI technology</p>
                         </div>
                     </div>
                 </div>
@@ -341,39 +388,35 @@
     <!-- How It Works Section -->
     <section class="section bg-white">
         <div class="container mx-auto px-4">
-            <h2 class="section-title">Simple As Talking To A Teacher</h2>
+            <h2 class="section-title">Simple As Learning From A Personal Tutor</h2>
             
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <!-- Step 1 -->
                 <div class="step-box">
                     <div class="flex flex-col items-center text-center">
-                        <div class="feature-icon">
-                            <i class="fas fa-comment-alt"></i>
-                        </div>
-                        <h3 class="text-xl font-semibold mb-3">SPEAK</h3>
-                        <p class="text-gray-600">Ask questions in your language, your accent, your way</p>
-                        
-                        <div class="mt-4 mic-btn">
-                            <i class="fas fa-microphone"></i>
-                        </div>
+                    <div class="feature-icon">
+                        <i class="fas fa-question-circle"></i>
                     </div>
+                    <h3 class="text-xl font-semibold mb-3">ASK</h3>
+                    <p class="text-gray-600">Ask questions in your language, your way, anytime</p>
+                    
+                    <div class="mt-4">
+                        <i class="fas fa-lightbulb text-yellow-400 text-2xl"></i>
+                    </div>
+                </div>
                 </div>
                 
                 <!-- Step 2 -->
                 <div class="step-box">
                     <div class="flex flex-col items-center text-center">
                         <div class="feature-icon">
-                            <i class="fas fa-headphones"></i>
+                            <i class="fas fa-chalkboard-teacher"></i>
                         </div>
-                        <h3 class="text-xl font-semibold mb-3">LISTEN</h3>
-                        <p class="text-gray-600">Receive clear explanations adapted to your understanding</p>
+                        <h3 class="text-xl font-semibold mb-3">UNDERSTAND</h3>
+                        <p class="text-gray-600">Receive clear explanations adapted to your level</p>
                         
-                        <div class="mt-4 sound-wave">
-                            <div class="bar"></div>
-                            <div class="bar"></div>
-                            <div class="bar"></div>
-                            <div class="bar"></div>
-                            <div class="bar"></div>
+                        <div class="mt-4">
+                            <i class="fas fa-book-open text-blue-500 text-2xl"></i>
                         </div>
                     </div>
                 </div>
@@ -385,7 +428,7 @@
                             <i class="fas fa-brain"></i>
                         </div>
                         <h3 class="text-xl font-semibold mb-3">LEARN</h3>
-                        <p class="text-gray-600">Master concepts through conversation, not memorization</p>
+                        <p class="text-gray-600">Master concepts through personalized guidance</p>
                         
                         <div class="mt-4">
                             <i class="fas fa-lightbulb text-yellow-500 text-3xl"></i>
@@ -395,7 +438,7 @@
             </div>
             
             <div class="text-center mt-8 italic text-gray-600">
-                "No typing, no reading walls of text, no language barriers - just natural learning conversations."
+                "No language barriers, no complex interfaces - just intuitive learning with personalized guidance."
             </div>
         </div>
     </section>
@@ -406,15 +449,13 @@
             <h2 class="section-title">Learning The Way You First Learned</h2>
             
             <div class="flex flex-col md:flex-row items-center justify-between gap-8">
-                <div class="md:w-1/2">
-                    <img src="/riddler-landing-page/Gemini_Generated_Image_qu88jbqu88jbqu88.jpeg" alt="Traditional family teaching scene" class="rounded-lg shadow-lg w-full mb-4" />
-                    <p class="text-sm text-center text-gray-500">Learning from family elders</p>
+                <div class="md:w-full">
+                    <div class="bg-blue-50 p-6 rounded-lg">
+                        <h3 class="text-xl font-semibold mb-4 text-center">From Family Wisdom to AI Learning</h3>
+                        <p class="text-gray-700 mb-4">Remember how your family taught you your first lessons? Not through textbooks, but through patient explanations in your mother tongue, using examples from everyday life.</p>
+                        <p class="text-gray-700">Riddler.AI brings that same natural experience to your studies - understanding your context, speaking your language, and explaining complex topics with familiar examples.</p>
+                    </div>
                 </div>
-                
-<!--                 <div class="md:w-1/2">
-                    <img src="/riddler-landing-page/Gemini_Generated_Image_qu88jbqu88jbqu88.jpeg" alt="AI Tutor interaction" class="rounded-lg shadow-lg w-full mb-4" />
-                    <p class="text-sm text-center text-gray-500">Learning from AI Tutor</p>
-                </div> -->
             </div>
             
             <div class="mt-12">
@@ -436,16 +477,16 @@
                     </div>
                     
                     <div class="bg-white p-4 rounded-lg shadow">
-                        <div class="flex items-start">
-                            <div class="feature-icon mr-4">
-                                <i class="fas fa-language"></i>
-                            </div>
-                            <div>
-                                <h3 class="font-semibold text-lg mb-2">Your Language</h3>
-                                <p class="text-gray-600">Thinks and teaches in the language you're comfortable with</p>
-                            </div>
+                    <div class="flex items-start">
+                        <div class="feature-icon mr-4">
+                            <i class="fas fa-language"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-lg mb-2">Your Language</h3>
+                            <p class="text-gray-600">Understands and teaches in the language you're comfortable with</p>
                         </div>
                     </div>
+                </div>
                     
                     <div class="bg-white p-4 rounded-lg shadow">
                         <div class="flex items-start">
@@ -549,7 +590,7 @@
     <!-- Why Voice Matters Section -->
     <section class="section bg-blue-50">
         <div class="container mx-auto px-4">
-            <h2 class="section-title">Voice: The Great Equalizer in Education</h2>
+            <h2 class="section-title">Making Quality Education Accessible</h2>
             
             <p class="text-center text-gray-700 mb-8">
                 In India, true educational access means meeting students where they are:
@@ -562,8 +603,8 @@
                             <i class="fas fa-book"></i>
                         </div>
                         <div>
-                            <h3 class="font-semibold text-lg mb-2">Beyond Text Barriers</h3>
-                            <p class="text-gray-600">32% of rural students struggle with text-heavy interfaces</p>
+                            <h3 class="font-semibold text-lg mb-2">Simplified Learning</h3>
+                            <p class="text-gray-600">32% of rural students struggle with complex educational interfaces</p>
                         </div>
                     </div>
                 </div>
@@ -574,8 +615,8 @@
                             <i class="fas fa-comments"></i>
                         </div>
                         <div>
-                            <h3 class="font-semibold text-lg mb-2">Natural Communication</h3>
-                            <p class="text-gray-600">Students explain concepts 4x better verbally than in writing</p>
+                            <h3 class="font-semibold text-lg mb-2">Natural Interaction</h3>
+                            <p class="text-gray-600">Students learn 4x better when education adapts to their communication style</p>
                         </div>
                     </div>
                 </div>
@@ -606,7 +647,7 @@
             </div>
             
             <div class="text-center mt-8 italic text-gray-600">
-                "When education speaks your language, knowledge becomes yours."
+                "When education speaks your language and understands your context, knowledge truly becomes yours."
             </div>
         </div>
     </section>
@@ -626,7 +667,6 @@
                         <label for="name" class="form-label">Name</label>
                         <div class="voice-input">
                             <input type="text" id="name" class="form-control" placeholder="Your full name">
-                            <i class="fas fa-microphone mic-icon"></i>
                         </div>
                     </div>
                     
@@ -634,7 +674,6 @@
                         <label for="phone" class="form-label">Phone Number (WhatsApp)</label>
                         <div class="voice-input">
                             <input type="tel" id="phone" class="form-control" placeholder="e.g. 9876543210">
-                            <i class="fas fa-microphone mic-icon"></i>
                         </div>
                     </div>
                     
@@ -657,7 +696,6 @@
                         <label for="school" class="form-label">School/College</label>
                         <div class="voice-input">
                             <input type="text" id="school" class="form-control" placeholder="Your institution name">
-                            <i class="fas fa-microphone mic-icon"></i>
                         </div>
                     </div>
                     
@@ -720,7 +758,7 @@
                 <div>
                     <h3 class="text-xl font-bold mb-4">Riddler.AI</h3>
                     <p class="text-gray-400 max-w-xs">
-                        India's first voice-native teaching companion that speaks, listens, and teaches in your mother tongue.
+                        India's first AI teaching companion that understands and teaches in your mother tongue.
                     </p>
                 </div>
                 
