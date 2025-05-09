@@ -7,6 +7,8 @@
     <meta name="description" content="India's first AI teaching companion that understands and teaches in your mother tongue. Learn complex subjects naturally in Hindi, Bengali, Tamil and 5+ languages.">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
         @import url('https://fonts.googleapis.com/css2?family=Hind:wght@300;400;500;600;700&display=swap');
@@ -425,6 +427,23 @@
                 padding: 10px;
             }
         }
+        
+        /* Custom styles for aspect ratio if @tailwindcss/aspect-ratio plugin is not used */
+        .aspect-w-16 {
+            position: relative;
+            padding-bottom: 56.25%; /* 9 / 16 = 0.5625 */
+        }
+        .aspect-h-9 > * {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        /* Define a primary color if not defined elsewhere for the play button */
+        .bg-primary {
+            background-color: #007bff; /* Example primary color (blue) */
+        }
     </style>
 </head>
 <body>
@@ -538,7 +557,8 @@
                         
                         <button class="btn-outline text-lg hidden sm:flex items-center justify-center">
                             <i class="fas fa-play-circle mr-2"></i>
-                            <span>Watch Demo</span>
+<!--                             <span>Watch Demo</span> -->
+                                <span>Demo Coming Out Soon!</span>
                         </button>
                     </div>
                     
@@ -724,10 +744,13 @@
                     </div>
                 </div>
                 
-                <div class="md:w-1/2 order-1 md:order-2">
+                <div class="md:w-1/2 order-1 md:order-2 w-full max-w-2xl">
                     <div class="relative rounded-xl overflow-hidden shadow-xl bg-white p-2">
                         <div class="aspect-w-16 aspect-h-9 rounded-lg overflow-hidden bg-gray-100 flex items-center justify-center">
-                            <img src="/api/placeholder/600/400" alt="Demo Video Thumbnail" class="w-full" />
+                            <img src="https://placehold.co/1280x720/E0E0E0/333333?text=Vidyaarthi.ai\nComing+Soon&font=roboto" 
+                                 alt="Vidyaarthi.ai - Coming Soon" 
+                                 class="w-full h-full object-cover" />
+                            
                             <div class="absolute inset-0 flex items-center justify-center">
                                 <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center cursor-pointer transform transition-transform hover:scale-110">
                                     <i class="fas fa-play text-white text-xl"></i>
